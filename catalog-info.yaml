@@ -6,11 +6,11 @@ metadata:
     A custom Backstage scaffolder action to apply any Kubernetes resource.
   links:
     - title: Repository
-      url: https://github.com/muvaf/kubernetes-apply
+      url: https://github.com/Ruivalim/kubernetes-apply
     - title: npm
-      url: https://www.npmjs.com/package/@muvaf/kubernetes-apply
+      url: https://www.npmjs.com/package/@ruivalim/kubernetes-apply
   annotations:
-    github.com/project-slug: muvaf/kubernetes-apply
+    github.com/project-slug: Ruivalim/kubernetes-apply
   tags:
     - backstage
     - kubernetes
@@ -21,5 +21,5 @@ metadata:
     - template
 spec:
   type: library
-  owner: muvaf
+  owner: ruivalim
   lifecycle: production
