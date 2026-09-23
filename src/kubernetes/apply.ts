@@ -1,8 +1,46 @@
+import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import { KubeConfig, KubernetesObjectApi } from '@kubernetes/client-node';
+import { KubeConfig, KubernetesObject, KubernetesObjectApi, PatchStrategy } from '@kubernetes/client-node';
 import YAML from 'yaml';
 import * as fs from 'fs';
-import * as path from 'path';
+
+const describeResource = (obj: KubernetesObject) =>
+  obj.metadata?.namespace ? `${obj.metadata.namespace}/${obj.metadata.name}` : obj.metadata?.name;
+
+export const parseManifests = (content: string, namespaced: boolean): KubernetesObject[] => {
+  const documents = YAML.parseAllDocuments(content);
+  const objects: KubernetesObject[] = [];
+
+  for (const doc of documents) {
+    if (doc.errors.length > 0) {
+      throw new Error(`Invalid manifest YAML: ${doc.errors[0].message}`);
+    }
+    const obj = doc.toJS();
+    // Empty documents, e.g. a trailing `---`
+    if (obj === null || obj === undefined) {
+      continue;
+    }
+
+    if (!obj.apiVersion) {
+      throw new Error('Invalid manifest: missing apiVersion field');
+    }
+    if (!obj.kind) {
+      throw new Error('Invalid manifest: missing kind field');
+    }
+    if (!obj.metadata?.name) {
+      throw new Error('Invalid manifest: missing metadata.name field');
+    }
+    if (namespaced && !obj.metadata?.namespace) {
+      throw new Error('Namespaced resource must have metadata.namespace field');
+    }
+    objects.push(obj);
+  }
+
+  if (objects.length === 0) {
+    throw new Error('Manifest does not contain any Kubernetes object');
+  }
+  return objects;
+};
 
 export const kubernetesApply = () => {
   return createTemplateAction({
@@ -12,8 +50,8 @@ export const kubernetesApply = () => {
     schema: {
       input: z =>
         z.object({
-          manifest: z.string().optional().describe('The manifest YAML content to apply in the cluster'),
-          manifestFile: z.string().optional().describe('Path to a YAML file containing the manifest to apply'),
+          manifest: z.string().optional().describe('The manifest YAML content to apply in the cluster. May contain several documents separated by ---'),
+          manifestFile: z.string().optional().describe('Path to a YAML file containing the manifest to apply, relative to the workspace'),
           namespaced: z.boolean().describe('Whether the API is namespaced or not'),
         }),
     },
@@ -31,8 +69,8 @@ export const kubernetesApply = () => {
       // Read manifest content from file or use direct input
       let manifestContent: string;
       if (manifestFile) {
+        const filePath = resolveSafeChildPath(ctx.workspacePath, manifestFile);
         try {
-          const filePath = path.resolve(ctx.workspacePath, manifestFile);
           ctx.logger.info(`Reading manifest from file: ${filePath}`);
           manifestContent = fs.readFileSync(filePath, 'utf8');
           ctx.logger.info(`Successfully read manifest file (${manifestContent.length} bytes)`);
@@ -44,55 +82,43 @@ export const kubernetesApply = () => {
         manifestContent = manifest!;
       }
 
-      const obj = YAML.parse(manifestContent);
+      const objects = parseManifests(manifestContent, namespaced);
 
-      // Validate required Kubernetes object fields
-      if (!obj.apiVersion) {
-        throw new Error('Invalid manifest: missing apiVersion field');
+      if (ctx.isDryRun) {
+        for (const obj of objects) {
+          ctx.logger.info(`Dry run: would apply ${obj.kind} ${describeResource(obj)}`);
+        }
+        return;
       }
-      if (!obj.kind) {
-        throw new Error('Invalid manifest: missing kind field');
-      }
-      if (!obj.metadata?.name) {
-        throw new Error('Invalid manifest: missing metadata.name field');
-      }
-      if (namespaced && !obj.metadata?.namespace) {
-        throw new Error('Namespaced resource must have metadata.namespace field');
-      }
-
-      const resourceId = obj.metadata.namespace ? `${obj.metadata.namespace}/${obj.metadata.name}` : obj.metadata.name;
-
-      ctx.logger.info(`Applying ${obj.kind} resource: ${resourceId}`, {
-        apiVersion: obj.apiVersion,
-        kind: obj.kind,
-        name: obj.metadata.name,
-        namespace: obj.metadata.namespace,
-      });
 
       const kc = new KubeConfig();
       kc.loadFromDefault();
       const client = KubernetesObjectApi.makeApiClient(kc);
 
-      // Server-side apply using KubernetesObjectApi (handles both core and custom resources)
-      await client
-        .patch(obj, undefined, undefined, 'backstage', true, {
-          headers: { 'Content-Type': 'application/apply-patch+yaml' },
-        })
-        .then(
-          resp => {
-            ctx.logger.info(`Successfully applied ${obj.kind} ${resourceId}: HTTP ${resp.response.statusCode}`);
-          },
-          err => {
-            ctx.logger.error(`Failed to apply ${obj.kind} ${resourceId}`, {
-              kind: obj.kind,
-              namespace: obj.metadata.namespace,
-              name: obj.metadata.name,
-              statusCode: err.response?.statusCode,
-              body: err.body,
-            });
-            throw err;
-          }
-        );
+      for (const obj of objects) {
+        const resourceId = describeResource(obj);
+        ctx.logger.info(`Applying ${obj.kind} resource: ${resourceId}`, {
+          apiVersion: obj.apiVersion,
+          kind: obj.kind,
+          name: obj.metadata?.name,
+          namespace: obj.metadata?.namespace,
+        });
+
+        try {
+          // Server-side apply handles both core and custom resources
+          await client.patch(obj, undefined, undefined, 'backstage', true, PatchStrategy.ServerSideApply);
+          ctx.logger.info(`Successfully applied ${obj.kind} ${resourceId}`);
+        } catch (err: any) {
+          ctx.logger.error(`Failed to apply ${obj.kind} ${resourceId}`, {
+            kind: obj.kind,
+            namespace: obj.metadata?.namespace,
+            name: obj.metadata?.name,
+            statusCode: err.code,
+            body: err.body,
+          });
+          throw err;
+        }
+      }
     },
   });
 };

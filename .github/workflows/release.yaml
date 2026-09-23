@@ -2,23 +2,31 @@ name: Release
 on:
   push:
     tags:
-      - v**
+      - v*
+
+# Publishes through npm trusted publishing (OIDC), no token stored anywhere.
+# The trusted publisher on npmjs.com points at this exact file name.
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: "22.x"
-          registry-url: "https://registry.npmjs.org/"
-          cache: 'yarn'
-      - run: yarn install --immutable --immutable-cache --check-cache
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: corepack enable
+      - run: yarn install --frozen-lockfile
+      - name: Tag must match package.json version
+        run: test "${GITHUB_REF_NAME#v}" = "$(node -p 'require("./package.json").version')"
       - run: yarn tsc
-      - run: yarn build
-      # VERSION has v prefix but yarn wants valid semver.
-      - run: yarn publish --new-version ${VERSION:1} --access public
+      - run: yarn lint
+      - run: yarn test
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          VERSION: ${{ github.ref_name }}
+          CI: true
+      - run: yarn build
+      - run: npm publish --provenance --access public
