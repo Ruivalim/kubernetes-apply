@@ -1,8 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":semanticCommits"],
+  "extends": [
+    "config:recommended",
+    ":semanticCommits"
+  ],
   "timezone": "America/Sao_Paulo",
-  "schedule": ["before 9am on monday"],
+  "schedule": [
+    "before 9am on monday"
+  ],
   "minimumReleaseAge": "3 days",
   "internalChecksFilter": "strict",
   "platformAutomerge": false,
@@ -13,20 +18,37 @@
   "packageRules": [
     {
       "description": "Stable (>=1.0) patch and minor updates merge on their own once CI is green",
-      "matchUpdateTypes": ["patch", "minor"],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "matchCurrentVersion": "!/^0/",
       "automerge": true
     },
     {
       "description": "Backstage ships monthly and most packages are 0.x, where any bump can break. One PR, reviewed by hand.",
-      "matchPackageNames": ["@backstage/**"],
+      "matchPackageNames": [
+        "@backstage/**"
+      ],
       "groupName": "backstage",
       "automerge": false
     },
     {
       "description": "Majors always go through review",
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "automerge": false
+    },
+    {
+      "description": "Stay on the @kubernetes/client-node major that Backstage itself uses, so apps install a single copy. Revisit when @backstage/plugin-kubernetes-backend moves to 2.x.",
+      "matchPackageNames": [
+        "@kubernetes/client-node"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
     }
   ]
 }
