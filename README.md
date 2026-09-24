@@ -202,3 +202,11 @@ This action supports all Kubernetes resources including:
 The action automatically handles both core API resources (apiVersion: v1) and grouped API resources (apiVersion: apps/v1).
 
 Resources are applied with server-side apply, using `backstage` as the field manager and forcing conflicts, so Backstage takes ownership of the fields it sets.
+
+## Releasing
+
+Releases are automated. Commits follow [Conventional Commits](https://www.conventionalcommits.org): `fix:` and `feat:` go into the next release, `feat!:` or a `BREAKING CHANGE:` footer marks a breaking one.
+
+[release-please](https://github.com/googleapis/release-please) keeps a release PR open with the next version and changelog. Merging it tags the release and publishes it to npm with provenance, through npm trusted publishing.
+
+Dependencies are kept up to date by [Renovate](https://docs.renovatebot.com): stable patch and minor updates merge on their own once CI passes, Backstage packages come grouped in one PR for review.
