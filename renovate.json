@@ -6,7 +6,7 @@
   ],
   "timezone": "America/Sao_Paulo",
   "schedule": [
-    "before 6am on monday"
+    "on monday"
   ],
   "labels": [
     "dependencies"
