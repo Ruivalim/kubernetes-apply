@@ -61,7 +61,7 @@
     "@types/node": "^22.10.0",
     "jest": "~30.5.0",
     "jsdom": "^30.0.0",
-    "typescript": "~5.9.0"
+    "typescript": "~7.0.0"
   },
   "bugs": {
     "url": "https://github.com/Ruivalim/kubernetes-apply/issues"
