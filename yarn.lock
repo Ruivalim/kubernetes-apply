@@ -882,7 +882,7 @@
   resolved "https://registry.yarnpkg.com/@backstage/backend-dev-utils/-/backend-dev-utils-0.1.7.tgz#8fd5737936128c4e663e6ad23fe5f158021290ae"
   integrity sha512-05lbgXZGofBHcs/Yz2TTI3Brn98BcUU8ZFVx/sCz1EXG8/eFoZSEjr7F2cA1x2UKTIYIt7HGZEYxF1+1lqxNDQ==
 
-"@backstage/backend-plugin-api@^1.10.1", "@backstage/backend-plugin-api@^1.11.0", "@backstage/backend-plugin-api@^1.12.0":
+"@backstage/backend-plugin-api@^1.10.1", "@backstage/backend-plugin-api@^1.12.0":
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/@backstage/backend-plugin-api/-/backend-plugin-api-1.12.0.tgz#b578b8e8ee1709932e54add5631e854172b7aaaa"
   integrity sha512-Mja6YSKy3J3O8tHzCDjL9naTKJCLZ1QhXz96ZJBPRYNdaxpUmVPLLl2EsACYHq57o6KYtVCNHP5oL19HUMpIbA==
@@ -952,7 +952,7 @@
     lodash "^4.17.21"
     uri-template "^2.0.0"
 
-"@backstage/catalog-model@^1.10.2", "@backstage/catalog-model@^1.10.3":
+"@backstage/catalog-model@^1.10.3":
   version "1.10.3"
   resolved "https://registry.yarnpkg.com/@backstage/catalog-model/-/catalog-model-1.10.3.tgz#0e1b3d7d3c9560f488841018ecab39859f157d82"
   integrity sha512-RynNd3YiIrQ4QCB/aA05zmykaVKOduwTlOh6RjUuGJ0+SulrzIwI1SVoR/N4oM0HrFL1FY1XBT0ZOEVFQ1xPgg==
@@ -1378,7 +1378,7 @@
     "@backstage/types" "^1.2.2"
     zod "^4.0.0"
 
-"@backstage/errors@^1.3.2", "@backstage/errors@^1.4.0":
+"@backstage/errors@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@backstage/errors/-/errors-1.4.0.tgz#8a728e4e83fd052885ce23aa05118c76ec6fc970"
   integrity sha512-iZo3IFi9pdY2k0vHQwQ1s5JL0aSY4XT9UQkQBeTLsyhpBlDtHJjrq6rnYemFEuudqQzIl8Za4j/Nzsx5AcJ35Q==
@@ -1419,7 +1419,7 @@
     "@backstage/connections" "^0.4.2"
     "@backstage/errors" "^1.4.0"
 
-"@backstage/integration@^2.1.3", "@backstage/integration@^2.2.0":
+"@backstage/integration@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@backstage/integration/-/integration-2.2.0.tgz#bf1d5722e15213f862eef181642f7212792daa06"
   integrity sha512-t/cvRyktqQ1COmBqBJHa5HYhp7hKo7YGO8dt6ISJtes47f1DKxf8aVcU+Y4mB9/e/gfrK6qx4fG+09t6NXp4vQ==
@@ -1492,7 +1492,7 @@
     express "^4.22.0"
     uri-template "^2.0.0"
 
-"@backstage/plugin-permission-common@^0.9.12", "@backstage/plugin-permission-common@^0.9.13":
+"@backstage/plugin-permission-common@^0.9.13":
   version "0.9.13"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-common/-/plugin-permission-common-0.9.13.tgz#d3928071e976474e33e40571f9bc10145336c35d"
   integrity sha512-ewlGJLriXUVULbPwLdtL+dLQ0fg+RQa4bx4ZD7cx93myg/Kp3SE4q52p7C04lzvtTvQcRO59swiL4AxMvVhs7Q==
@@ -1504,7 +1504,7 @@
     zod "^3.25.76 || ^4.0.0"
     zod-to-json-schema "^3.25.1"
 
-"@backstage/plugin-permission-node@^0.11.5", "@backstage/plugin-permission-node@^0.11.6":
+"@backstage/plugin-permission-node@^0.11.6":
   version "0.11.6"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-node/-/plugin-permission-node-0.11.6.tgz#45781ceb08cbdcc1dedf36ef4323f60dda8628eb"
   integrity sha512-oXLjJ9awwKMG9rNZF+I6/+DbWfar8dbzFE/6VS6t1hjItQvEH2s0c4mB//fxCCS/QaF+cEho/Dsg1Dg5R+ISYg==
@@ -1520,7 +1520,7 @@
     zod "^3.25.76 || ^4.0.0"
     zod-to-json-schema "^3.25.1"
 
-"@backstage/plugin-scaffolder-common@^2.3.1", "@backstage/plugin-scaffolder-common@^2.4.0":
+"@backstage/plugin-scaffolder-common@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-common/-/plugin-scaffolder-common-2.4.0.tgz#c7be4fdabe1ecac042c52b1f7712d17e7140bdad"
   integrity sha512-mPGoQEGZqVOJhRt8TGrwXU69ZW6fDfPwMZ1jIW64XwXOpZuTq4jfgHA86ia7d8Sz8PNjCm5ivZ+30ePjinkohg==
@@ -1548,33 +1548,6 @@
     "@backstage/types" "^1.2.2"
     winston "^3.2.1"
     winston-transport "^4.7.0"
-
-"@backstage/plugin-scaffolder-node@^0.13.7":
-  version "0.13.8"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-node/-/plugin-scaffolder-node-0.13.8.tgz#f6bf4096c0729d8b742aab01970934a5924c65e4"
-  integrity sha512-tSCJGMsIfBvNT0+SX8iK91wslf6B0NTfDg9Ub5FBmpACpaYfsuIdHohSghrCSPbsWLIT4kEgHdXfr8JSnKZlHA==
-  dependencies:
-    "@backstage/backend-plugin-api" "^1.11.0"
-    "@backstage/catalog-model" "^1.10.2"
-    "@backstage/errors" "^1.3.2"
-    "@backstage/integration" "^2.1.3"
-    "@backstage/plugin-permission-common" "^0.9.12"
-    "@backstage/plugin-permission-node" "^0.11.5"
-    "@backstage/plugin-scaffolder-common" "^2.3.1"
-    "@backstage/types" "^1.2.2"
-    "@isomorphic-git/pgp-plugin" "^0.0.7"
-    concat-stream "^2.0.0"
-    fs-extra "^11.2.0"
-    globby "^11.0.0"
-    isomorphic-git "^1.23.0"
-    jsonschema "^1.5.0"
-    lodash "^4.17.21"
-    p-limit "^3.1.0"
-    tar "^7.5.21"
-    winston "^3.2.1"
-    winston-transport "^4.7.0"
-    zod "^3.25.76 || ^4.0.0"
-    zod-to-json-schema "^3.25.1"
 
 "@backstage/plugin-scaffolder-node@^1.0.0":
   version "1.0.0"
